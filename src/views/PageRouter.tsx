@@ -1,39 +1,42 @@
-import { VFC } from "react"
-import { SidebarNavigation, useParams } from "decky-frontend-lib"
-import { BsCSquareFill, BsExclamationSquareFill, BsFillBoxFill } from "react-icons/bs"
+import { VFC } from "react";
+import { SidebarNavigation, useParams } from "decky-frontend-lib";
+import {
+  BsCSquareFill,
+  BsExclamationSquareFill,
+  BsFillBoxFill,
+} from "react-icons/bs";
 
-import Normal from "./Normal"
-import Advanced from "./Advanced"
-import Custom from "./Custom"
-
+import Normal from "./Normal";
+import Advanced from "./Advanced";
+import Custom from "./Custom";
 
 const PageRouter: VFC = () => {
   var { appid } = useParams<{ appid: number }>();
-  if (typeof appid === 'string') { appid = parseInt(appid, 10) }
+  if (typeof appid === "string") {
+    appid = parseInt(appid, 10);
+  }
   const pages = [
     {
-      title: 'Normal',
+      title: "Normal",
       content: <Normal appid={appid} />,
       icon: <BsFillBoxFill />,
-      hideTitle: false
+      hideTitle: false,
     },
     {
-      title: 'Advanced',
+      title: "Advanced",
       content: <Advanced appid={appid} />,
       icon: <BsExclamationSquareFill />,
-      hideTitle: false
+      hideTitle: false,
     },
     {
-      title: 'Custom',
+      title: "Custom",
       content: <Custom appid={appid} />,
       icon: <BsCSquareFill />,
-      hideTitle: false
-    }
-  ]
+      hideTitle: false,
+    },
+  ];
 
-  return (
-    <SidebarNavigation pages={pages} />
-  )
-}
+  return <SidebarNavigation pages={pages} />;
+};
 
-export default PageRouter
+export default PageRouter;

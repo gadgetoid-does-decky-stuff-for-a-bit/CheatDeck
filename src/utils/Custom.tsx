@@ -9,9 +9,11 @@ export interface CustomOption {
   value: string;
 }
 
-
 export const getCustomOptions = async () => {
-  const savedOpt = await Backend.getSetting("CustomOptions", []) as CustomOption[];
+  const savedOpt = (await Backend.getSetting(
+    "CustomOptions",
+    [],
+  )) as CustomOption[];
 
   const optsWithId = savedOpt.map((option) => ({
     ...option,
@@ -20,20 +22,20 @@ export const getCustomOptions = async () => {
 
   logger.info(`Load user settings:\n${JSON.stringify(optsWithId, null, 2)}`);
   return optsWithId;
-}
+};
 
 export const setCustomOptions = async (data: CustomOption[]) => {
   const optsWithoutId = data.map(({ id, ...rest }) => rest);
   let optList = await Backend.setSetting("CustomOptions", optsWithoutId);
-  logger.info(`Set user settings:\n${JSON.stringify(optList, null, 2)}`)
-}
+  logger.info(`Set user settings:\n${JSON.stringify(optList, null, 2)}`);
+};
 
 export const getEmptyCusOpt = () => {
   const emptyOpt: CustomOption = {
     id: uuidv4(),
-    label: '',
-    field: '',
-    value: ''
-  }
+    label: "",
+    field: "",
+    value: "",
+  };
   return emptyOpt;
-}
+};

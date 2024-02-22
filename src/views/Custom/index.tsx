@@ -4,8 +4,8 @@ import {
   Focusable,
   ToggleField,
   showModal,
-} from "decky-frontend-lib"
-import { VFC, useEffect, useState } from "react"
+} from "decky-frontend-lib";
+import { VFC, useEffect, useState } from "react";
 import { BsGearFill } from "react-icons/bs";
 import { MdAddBox } from "react-icons/md";
 
@@ -14,7 +14,6 @@ import { Options } from "../../utils/Options";
 import { CustomOption, getCustomOptions } from "../../utils/Custom";
 import { Modals } from "./modals";
 // import logger from "../../utils/Logger";
-
 
 const Custom: VFC<{ appid: number }> = ({ appid }) => {
   // local storage custom options list
@@ -26,12 +25,17 @@ const Custom: VFC<{ appid: number }> = ({ appid }) => {
     getCustomOptions().then((result) => {
       setCusOptList(result as CustomOption[]);
     });
-    const { unregister } = SteamClient.Apps.RegisterForAppDetails(appid, (detail: AppDetails) => {
-      const optionsString = detail.strLaunchOptions;
-      const savedOptions = new Options(optionsString);
-      setOptions(savedOptions);
-    })
-    setTimeout(() => { unregister() }, 1000);
+    const { unregister } = SteamClient.Apps.RegisterForAppDetails(
+      appid,
+      (detail: AppDetails) => {
+        const optionsString = detail.strLaunchOptions;
+        const savedOptions = new Options(optionsString);
+        setOptions(savedOptions);
+      },
+    );
+    setTimeout(() => {
+      unregister();
+    }, 1000);
   }, []);
 
   const updateOptList = (updatedOptList: CustomOption[]) => {
@@ -41,8 +45,7 @@ const Custom: VFC<{ appid: number }> = ({ appid }) => {
   const saveOptions = async () => {
     SteamClient.Apps.SetAppLaunchOptions(appid, options.getOptionsString());
     Backend.sendNotice("Custom settings saved.");
-  }
-
+  };
 
   return (
     <>
@@ -108,49 +111,59 @@ const Custom: VFC<{ appid: number }> = ({ appid }) => {
           }
         `}
       </style>
-      {(cusOptList.length > 0) && (
+      {cusOptList.length > 0 &&
         cusOptList.map((opt: CustomOption) => (
           <Focusable className="CD_EntryContainer">
-            <Focusable
-              className="CD_ToggleContainer"
-            >
+            <Focusable className="CD_ToggleContainer">
               <ToggleField
                 bottomSeparator="none"
                 label={<span className="CD_Label">{opt.label}</span>}
                 checked={options.hasFieldValue(opt.field, opt.value)}
                 onChange={(enable: boolean) => {
-                  const updatedOptions = new Options(options.getOptionsString());
-                  updatedOptions.setFieldValue(opt.field, enable ? opt.value : '');
+                  const updatedOptions = new Options(
+                    options.getOptionsString(),
+                  );
+                  updatedOptions.setFieldValue(
+                    opt.field,
+                    enable ? opt.value : "",
+                  );
                   setOptions(updatedOptions);
                 }}
               />
             </Focusable>
             <DialogButton
               className="CD_DialogButton"
-              onClick={() => { showModal(<Modals id={opt.id} optList={cusOptList} onSave={updateOptList} />, window) }}
+              onClick={() => {
+                showModal(
+                  <Modals
+                    id={opt.id}
+                    optList={cusOptList}
+                    onSave={updateOptList}
+                  />,
+                  window,
+                );
+              }}
             >
               <BsGearFill className="CD_IconTranslate" />
             </DialogButton>
           </Focusable>
-        ))
-      )}
+        ))}
 
       <DialogButton
         className="CD_AddButton"
-        onClick={() => { showModal(<Modals optList={cusOptList} onSave={updateOptList} />) }}
+        onClick={() => {
+          showModal(<Modals optList={cusOptList} onSave={updateOptList} />);
+        }}
       >
         <MdAddBox />
       </DialogButton>
-      {(cusOptList.length > 0) && (
-        <DialogButton
-          className="CD_SaveButton"
-          onClick={saveOptions}
-        >
+      {cusOptList.length > 0 && (
+        <DialogButton className="CD_SaveButton" onClick={saveOptions}>
           Save Settings
         </DialogButton>
       )}
     </>
-  )
-}
+  );
+};
 
 export default Custom;
