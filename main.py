@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import logging, os
+import logging
 from settings import SettingsManager # type: ignore
 import decky_plugin # type: ignore
 
